@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-12">
+
+    {% with success_messages = get_flashed_messages(category_filter=['success']) %}
+      {% if success_messages %}
+        <div class="mt-4 mb-0 alert alert-success">
+          {% for message in success_messages %}
+            {{ message }}<br>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% with error_messages = get_flashed_messages(category_filter=['error']) %}
+      {% if error_messages %}
+        <div class="mt-4 mb-0 alert alert-danger">
+          {% for message in error_messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+  </div>
+</div>

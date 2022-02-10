@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block main %}
+<div class="row">
+  <div class="col-md-12 text-center">
+    <h3 class="mt-4 mb-4 text-primary">O que fazer hoje?</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="{{ url_for('store_task') }}" method="post">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Digite sua tarefa" name="task">
+        <button class="btn btn-outline-secondary bg-primary text-light" type="submit" id="button-addon2">Criar tarefa</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <hr>
+  </div>
+</div>
+
+{% include "partials/alert.html" %}
+
+<div class="row mt-5">
+  <div class="col-md-9 text-end align-middle"></div>
+  <div class="col-md-3">
+
+    <form action="{{ url_for('index') }}" method="get">
+      <div class="input-group">
+        <select class="form-select" name="filter" required>
+          <option {{ "selected" if filter == None }} value="">Filtrar por...</option>
+          <option {{ "selected" if filter == "all" else "" }} value="all">Todos</option>
+          <option {{ "selected" if filter == "in-course" else "" }} value="in-course">Em aberto</option>
+          <option {{ "selected" if filter == "completed" else "" }} value="completed">Concluído</option>
+        </select>
+        <button class="btn btn-primary" type="submit">Filtrar</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h5 class="mt-5 mb-3">Tarefas cadastradas: {{ tasks | length }}</h5>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Tarefa</th>
+          <th scope="col">Data</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for task in tasks %}
+          <tr class="{{ 'completed' if task['completed'] else '' }}">
+            <th scope="row">{{ task["id"] }}</th>
+            <td>{{ task["title"] }}</td>
+            <td>{{ task["created_at"] }}</td>
+            <td width="200">
+              {% if task['completed'] %}
+                <a href="{{ url_for('switch_task', id=task['id']) }}?status={{ task['completed'] }}" class="btn btn-warning btn-sm"><i class="bi bi-hammer"></i> Reverter</a>
+              {% else %}
+                <a href="{{ url_for('switch_task', id=task['id']) }}?status={{ task['completed'] }}" class="btn btn-success btn-sm"><i class="bi bi-hammer"></i> Concluir</a>
+              {% endif %}
+
+              <a href="{{ url_for('delete_task', id=task['id']) }}" class="btn btn-danger btn-sm"><i class="bi bi-trash3-fill"></i> Excluir</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+{% endblock %}
